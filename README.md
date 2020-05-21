@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
     <a href="https://www.iviewui.com">
         <img width="200" src="https://file.iviewui.com/logo-new.svg">
@@ -88,3 +89,6 @@ npm run build
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2016-present, TalkingData
+=======
+# viewui-admin-demo
+>>>>>>> 5295c83d1e4842060e89826ad356b6980745057c
