@@ -32,7 +32,7 @@ export default {
     client_id: 'js',
     redirect_uri: 'http://localhost:5003/signin_redirect',
     response_type: 'code',
-    scope: 'openid profile api1',
+    scope: 'openid profile api1 email location power',
     post_logout_redirect_uri: 'http://localhost:5003/login',
     silent_redirect_uri: 'http://localhost:5003/silent_signin'
   },

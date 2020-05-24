@@ -41,6 +41,7 @@ export default {
     },
     setAccess (state, access) {
       state.access = access
+      console.log('acess: ' + access)
     },
     // setToken (state, token) {
     //   state.token = token
@@ -160,7 +161,7 @@ export default {
             commit('setAvatar', data.profile.picture)
             commit('setUserName', data.profile.given_name)
             commit('setUserId', data.profile.sub)
-            commit('setAccess', ['super_admin'])
+            commit('setAccess', JSON.parse(data.profile.power))
             commit('setHasGetInfo', true)
             resolve(data)
           }).catch(err => {
