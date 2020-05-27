@@ -22,10 +22,10 @@
           :class="titleClass"
           @on-select="handleView"
         >
-          <MenuItem v-for="item in messageList" :name="item.msg_id" :key="`msg_${item.msg_id}`">
+          <MenuItem v-for="item in messageList" :name="item.id" :key="`msg_${item.id}`">
             <div>
               <p class="msg-title">{{ item.title }}</p>
-              <Badge status="default" :text="item.create_time" />
+              <Badge status="default" :text="item.createTime" />
               <Button
                 style="float: right;margin-right: 20px;"
                 :style="{ display: item.loading ? 'inline-block !important' : '' }"
@@ -42,7 +42,7 @@
       </div>
       <div class="message-page-con message-view-con">
         <Spin fix v-if="contentLoading" size="large"></Spin>
-        <div class="message-view-header">
+        <div v-if="showingMsgItem" class="message-view-header">
           <h2 class="message-view-title">{{ showingMsgItem.title }}</h2>
           <time class="message-view-time">{{ showingMsgItem.create_time }}</time>
         </div>
@@ -106,12 +106,14 @@ export default {
     },
     handleSelect (name) {
       this.currentMessageType = name
+      this.messageContent = null
+      this.showingMsgItem = null
     },
     handleView (msg_id) {
       this.contentLoading = true
       this.getContentByMsgId({ msg_id }).then(content => {
         this.messageContent = content
-        const item = this.messageList.find(item => item.msg_id === msg_id)
+        const item = this.messageList.find(item => item.id === msg_id)
         if (item) this.showingMsgItem = item
         if (this.currentMessageType === 'unread') this.hasRead({ msg_id })
         this.stopLoading('contentLoading')
@@ -121,9 +123,10 @@ export default {
     },
     removeMsg (item) {
       item.loading = true
-      const msg_id = item.msg_id
+      const msg_id = item.id
       if (this.currentMessageType === 'readed') this.removeReaded({ msg_id })
       else this.restoreTrash({ msg_id })
+      item.loading = false
     }
   },
   mounted () {

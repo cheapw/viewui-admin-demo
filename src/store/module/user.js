@@ -66,7 +66,7 @@ export default {
       state.messageContentStore[msg_id] = content
     },
     moveMsg (state, { from, to, msg_id }) {
-      const index = state[from].findIndex(_ => _.msg_id === msg_id)
+      const index = state[from].findIndex(_ => _.id === msg_id)
       const msgItem = state[from].splice(index, 1)[0]
       msgItem.loading = false
       state[to].unshift(msgItem)
@@ -175,24 +175,39 @@ export default {
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {
       getUnreadCount().then(res => {
-        const { data } = res
-        commit('setMessageCount', data)
+        // console.log('unread count: ' + res)
+        const { unread_count } = res.data
+        console.log('unread count: ' + unread_count)
+        commit('setMessageCount', unread_count)
       })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表
     getMessageList ({ state, commit }) {
+      console.log('getMessageList 方法开始执行')
       return new Promise((resolve, reject) => {
         getMessage().then(res => {
-          const { unread, readed, trash } = res.data
-          commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageReadedList', readed.map(_ => {
+          console.log('messageList: ' + res.data[0].title)
+          // console.log(res.data[0].isRead)
+          const unread = res.data.filter((item, index, array) => {
+            return !item.isRead && !item.isDelete
+          })
+          const read = res.data.filter((item, index, array) => {
+            return item.isRead && !item.isDelete
+          })
+          const trash = res.data.filter((item, index, array) => {
+            return item.isRead && item.isDelete
+          })
+          // console.log(unread1)
+          // const { unread, readed, trash } = res.data
+          commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.createTime) - new Date(a.createTime)))
+          commit('setMessageReadedList', read.map(_ => {
             _.loading = false
             return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+          }).sort((a, b) => new Date(b.createTime) - new Date(a.createTime)))
           commit('setMessageTrashList', trash.map(_ => {
             _.loading = false
             return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+          }).sort((a, b) => new Date(b.createTime) - new Date(a.createTime)))
           resolve()
         }).catch(error => {
           reject(error)
@@ -208,6 +223,7 @@ export default {
         } else {
           getContentByMsgId(msg_id).then(res => {
             const content = res.data
+            console.log(content)
             commit('updateMessageContentStore', { msg_id, content })
             resolve(content)
           })

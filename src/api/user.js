@@ -1,4 +1,5 @@
 import axios from '@/libs/api.request'
+import qs from 'qs'
 
 // export const login = ({ userName, password }) => {
 //   const data = {
@@ -29,56 +30,69 @@ import axios from '@/libs/api.request'
 //   })
 // }
 
+// export const getUnreadCount = () => {
+//   return axios.request({
+//     url: 'message/count',
+//     method: 'get'
+//   })
+// }
+
 export const getUnreadCount = () => {
+  console.log('getUnreadCount 方法开始执行')
   return axios.request({
-    url: 'message/count',
+    url: 'usermessages/unreadcount',
     method: 'get'
   })
 }
 
 export const getMessage = () => {
+  console.log('getMessage 方法开始执行')
   return axios.request({
-    url: 'message/init',
+    url: 'usermessages',
     method: 'get'
   })
 }
 
-export const getContentByMsgId = msg_id => {
+export const getContentByMsgId = id => {
   return axios.request({
-    url: 'message/content',
+    url: 'usermessages/content',
     method: 'get',
     params: {
-      msg_id
+      id
     }
   })
 }
 
-export const hasRead = msg_id => {
+export const hasRead = id => {
+  console.log(id)
   return axios.request({
-    url: 'message/has_read',
+    url: 'usermessages/has_read',
     method: 'post',
-    data: {
-      msg_id
-    }
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({ id: id })
   })
 }
 
-export const removeReaded = msg_id => {
+export const removeReaded = id => {
   return axios.request({
-    url: 'message/remove_readed',
+    url: 'usermessages/remove_readed',
     method: 'post',
-    data: {
-      msg_id
-    }
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({ id: id })
   })
 }
 
-export const restoreTrash = msg_id => {
+export const restoreTrash = id => {
   return axios.request({
-    url: 'message/restore',
+    url: 'usermessages/restore',
     method: 'post',
-    data: {
-      msg_id
-    }
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({ id: id })
   })
 }
