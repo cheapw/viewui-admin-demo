@@ -32,14 +32,18 @@ class HttpRequest {
       // Spin.hide()
     }
   }
-  interceptors (instance, url) {
+  async interceptors (instance, url) {
     // 请求拦截
-    instance.interceptors.request.use(config => {
+    instance.interceptors.request.use(async config => {
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
       }
       this.queue[url] = true
+      var user = await store.dispatch('getUser')
+      // console.log(config.headers)
+      config.headers.Authorization = 'Bearer ' + user.access_token
+      // console.log(config)
       return config
     }, error => {
       return Promise.reject(error)
@@ -50,8 +54,11 @@ class HttpRequest {
       const { data, status } = res
       return { data, status }
     }, error => {
+      console.log('出错啦')
+      console.log('url: ' + url)
       this.destroy(url)
       let errorInfo = error.response
+      console.log(error.response)
       if (!errorInfo) {
         const { request: { statusText, status }, config } = JSON.parse(JSON.stringify(error))
         errorInfo = {
@@ -61,6 +68,7 @@ class HttpRequest {
         }
       }
       addErrorLog(errorInfo)
+      console.log(error)
       return Promise.reject(error)
     })
   }

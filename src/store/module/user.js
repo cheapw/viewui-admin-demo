@@ -179,6 +179,20 @@ export default {
         const { unread_count } = res.data
         console.log('unread count: ' + unread_count)
         commit('setMessageCount', unread_count)
+      },
+      (err) => {
+        // if (!err) {
+        //   return
+        // }
+        // console.log('getUnreadCount 请求出错：' + err.status)
+        if (err.response.status === 401) {
+          // console.log('是的')
+          // this.dispatch('getUnreadMessageCount')
+          state.userManager.signinSilent().then(() => {
+            // console.log(user)
+            this.dispatch('getUnreadMessageCount')
+          })
+        }
       })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表
@@ -209,6 +223,12 @@ export default {
             return _
           }).sort((a, b) => new Date(b.createTime) - new Date(a.createTime)))
           resolve()
+        }, (err) => {
+          if (err.response.status === 401) {
+            state.userManager.signinSilent().then(() => {
+              this.dispatch('getMessageList')
+            })
+          }
         }).catch(error => {
           reject(error)
         })
@@ -226,6 +246,12 @@ export default {
             console.log(content)
             commit('updateMessageContentStore', { msg_id, content })
             resolve(content)
+          }, (err) => {
+            if (err.response.status === 401) {
+              state.userManager.signinSilent().then(() => {
+                this.dispatch('getContentByMsgId')
+              })
+            }
           })
         }
       })
@@ -241,6 +267,12 @@ export default {
           })
           commit('setMessageCount', state.unreadCount - 1)
           resolve()
+        }, (err) => {
+          if (err.response.status === 401) {
+            state.userManager.signinSilent().then(() => {
+              this.dispatch('getContentByMsgId')
+            })
+          }
         }).catch(error => {
           reject(error)
         })
@@ -256,6 +288,12 @@ export default {
             msg_id
           })
           resolve()
+        }, (err) => {
+          if (err.response.status === 401) {
+            state.userManager.signinSilent().then(() => {
+              this.dispatch('getContentByMsgId')
+            })
+          }
         }).catch(error => {
           reject(error)
         })
@@ -271,6 +309,12 @@ export default {
             msg_id
           })
           resolve()
+        }, (err) => {
+          if (err.response.status === 401) {
+            state.userManager.signinSilent().then(() => {
+              this.dispatch('getContentByMsgId')
+            })
+          }
         }).catch(error => {
           reject(error)
         })
