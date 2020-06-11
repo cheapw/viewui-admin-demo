@@ -37,6 +37,29 @@ import qs from 'qs'
 //   })
 // }
 
+export const register = (data) => {
+  return axios.request({
+    url: 'register',
+    method: 'post',
+    header: {
+      'content-type': 'application/json'
+    },
+    data: data
+  })
+}
+
+export const sendMail = email => {
+  console.log(email)
+  return axios.request({
+    url: 'register/sendmail',
+    method: 'post',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({ email: email })
+  })
+}
+
 export const getUnreadCount = () => {
   console.log('getUnreadCount 方法开始执行')
   return axios.request({

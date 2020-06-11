@@ -14,6 +14,7 @@ const router = new Router({
 })
 const LOGIN_PAGE_NAME = 'login'
 const SIGNIN_REDIRECT_PAGE = 'signin_redirect'
+const REGISTER_PAGE = 'register'
 // const SILENT_SIGNIN = 'silent_signin'
 
 const turnTo = (to, access, next) => {
@@ -24,6 +25,11 @@ const turnTo = (to, access, next) => {
 
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start()
+  if (to.name === REGISTER_PAGE) {
+    next()
+    return
+  }
+
   if (to.name === SIGNIN_REDIRECT_PAGE) {
     console.log('是否是重定向页面：' + to.name)
     next()

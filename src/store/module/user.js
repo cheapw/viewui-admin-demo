@@ -95,11 +95,10 @@ export default {
     //   })
     // },
     handleLogin ({ state }) {
-      state.userManager.signinRedirect()
-      // var user = state.userManager.getUser()
-      // if (user) {
-      //   console.log(user)
-      // }
+      return state.userManager.signinRedirect().catch((err) => {
+        console.log('error: ' + err)
+        return Promise.reject(err)
+      })
     },
     // 退出登录
     // handleLogOut ({ state, commit }) {

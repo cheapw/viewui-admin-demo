@@ -46,6 +46,15 @@ export default [
     component: () => import('@/view/login/silent-signin/silent-signin.vue')
   },
   {
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: '用户注册',
+      hideInMenu: true
+    },
+    component: () => import('@/view/register/register.vue')
+  },
+  {
     path: '/',
     name: '_home',
     redirect: '/home',

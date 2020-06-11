@@ -22,7 +22,7 @@
       <br/><br/>
       <Row type="flex" justify="start">
         <Col offset="6">
-          <Button type="dashed" size="large" style="width:150px;" ghost>
+          <Button type="dashed" size="large" style="width:150px;" ghost @click="register">
             <Icon type="ios-paw-outline" size="20" style="padding-right:2px;"/>
             注册
           </Button>
@@ -64,7 +64,20 @@ export default {
     //   })
     // },
     login () {
-      this.handleLogin()
+      this.handleLogin().then((res) => {
+        // console.log(res.data)
+      }, (err) => {
+        // console.log('哈哈哈' + err)
+        // console.log(err)
+        this.$Message['error']({
+          background: true,
+          duration: 1.8,
+          content: err
+        })
+      })
+    },
+    register () {
+      this.$router.push({ name: 'register' })
     }
   }
 }

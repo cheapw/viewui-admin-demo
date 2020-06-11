@@ -42,7 +42,9 @@ class HttpRequest {
       this.queue[url] = true
       var user = await store.dispatch('getUser')
       // console.log(config.headers)
-      config.headers.Authorization = 'Bearer ' + user.access_token
+      if (user) {
+        config.headers.Authorization = 'Bearer ' + user.access_token
+      }
       // console.log(config)
       return config
     }, error => {
@@ -55,6 +57,7 @@ class HttpRequest {
       return { data, status }
     }, error => {
       console.log('出错啦')
+      // console.log(error)
       console.log('url: ' + url)
       this.destroy(url)
       let errorInfo = error.response
@@ -68,7 +71,7 @@ class HttpRequest {
         }
       }
       addErrorLog(errorInfo)
-      console.log(error)
+      console.log('error from axios.js: ' + error)
       return Promise.reject(error)
     })
   }
