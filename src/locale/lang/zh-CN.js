@@ -3,6 +3,8 @@ export default {
   login: '登录',
   signin_redirect: '正在跳转',
   silent_signin: '静默登录',
+  register: '用户登录',
+  reset_password: '密码重置',
   components: '组件',
   count_to_page: '数字渐变',
   tables_page: '多功能表格',

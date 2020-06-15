@@ -15,6 +15,7 @@ const router = new Router({
 const LOGIN_PAGE_NAME = 'login'
 const SIGNIN_REDIRECT_PAGE = 'signin_redirect'
 const REGISTER_PAGE = 'register'
+const RESET_PASSWORD_PAGE = 'reset_password'
 // const SILENT_SIGNIN = 'silent_signin'
 
 const turnTo = (to, access, next) => {
@@ -25,7 +26,7 @@ const turnTo = (to, access, next) => {
 
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start()
-  if (to.name === REGISTER_PAGE) {
+  if (to.name === REGISTER_PAGE || to.name === RESET_PASSWORD_PAGE) {
     next()
     return
   }
@@ -113,6 +114,10 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(to => {
+  // this.$Notice.close('tip1')
+  // this.$Notice.close('tip2')
+  Vue.prototype.$Notice.close('tip1')
+  Vue.prototype.$Notice.close('tip2')
   setTitle(to, router.app)
   ViewUI.LoadingBar.finish()
   window.scrollTo(0, 0)

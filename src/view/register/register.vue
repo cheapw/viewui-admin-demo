@@ -3,15 +3,14 @@
 </style>
 
 <template>
-  <div class="login">
-    <div class="login-con">
+  <div class="register-page">
+    <div class="register-page-con">
       <Card class="registerCard" icon="ios-person-add" title="用户注册" :bordered="false" style="background:transparent">
         <div class="form-con">
           <register-form @on-success-valid="handleSubmit"></register-form>
-          <!-- <p class="login-tip">输入任意用户名和密码即可</p> -->
         </div>
       </Card>
-      <Row type="flex" justify="center" align="middle">
+      <Row type="flex" justify="center" align="middle" style="margin-top:6px;">
         <Col offset="0">
           <span style="color:lightgreen">已有账号？</span>
         </Col>
@@ -22,7 +21,7 @@
           <span style="color:lightcoral">忘记密码？</span>
         </Col>
         <Col span="4" offset="0">
-          <Button type="text" size="small" ghost>重置</Button>
+          <Button type="text" size="small" ghost @click="resetPassword">重置</Button>
         </Col>
     </Row>
     </div>
@@ -43,9 +42,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'handleLogin',
-      'handleLogin',
-      'getUserInfo'
+      'handleLogin'
     ]),
     handleSubmit ({ userName, password, email, verifyCode }) {
       let userId = uuidv4()
@@ -130,13 +127,6 @@ export default {
           content: err.response.data
         })
       })
-      // this.handleLogin({ userName, password }).then(res => {
-      //   this.getUserInfo().then(res => {
-      //     this.$router.push({
-      //       name: this.$config.homeName
-      //     })
-      //   })
-      // })
     },
     redirectToLoginPage () {
       console.log('开始登录跳转页面请求')
@@ -153,7 +143,7 @@ export default {
       })
     },
     resetPassword () {
-
+      this.$router.push({ name: 'reset_password' })
     }
   }
 }
@@ -166,13 +156,16 @@ export default {
 .registerCard .ivu-card-head p{
   height: 36px;
 }
-.registerCard .ivu-card-head p span,i{
+.registerCard .ivu-card-head p span,.registerCard .ivu-card-head p i{
   color: white;
   font-size: 30px;
   height: auto;
   padding: 0px 3px;
 }
 .registerCard .ivu-card-body{
-  padding: 16px 16px 0px 16px;
+  padding: 16px 16px 2px 16px;
+}
+#registerBtn{
+  margin-bottom: 0px;
 }
 </style>

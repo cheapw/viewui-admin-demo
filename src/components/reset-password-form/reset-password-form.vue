@@ -1,28 +1,14 @@
 <template>
-  <Form ref="registerForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
+  <Form ref="resetPasswordForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
     <FormItem prop="userName">
-      <Input v-model="form.userName" placeholder="请输入用户名" class="register">
+      <Input v-model="form.userName" placeholder="请输入用户名" class="resetPassword">
         <span slot="prepend">
           <Icon type="ios-person"></Icon>
         </span>
       </Input>
     </FormItem>
-    <FormItem prop="password">
-      <Input type="password" v-model="form.password" placeholder="请输入密码" class="register">
-        <span slot="prepend">
-          <Icon type="ios-lock"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <FormItem prop="comfirm">
-      <Input type="password" v-model="form.comfirm" placeholder="请再次输入密码" class="register">
-        <span slot="prepend">
-          <Icon type="ios-lock"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <FormItem prop="email">
-      <Input type="email" v-model="form.email" placeholder="请输入邮箱获取验证码" class="register">
+        <FormItem prop="email">
+      <Input type="email" v-model="form.email" placeholder="请输入邮箱获取验证码" class="resetPassword">
         <span slot="prepend">
           <Icon type="ios-mail"></Icon>
         </span>
@@ -31,15 +17,29 @@
     <FormItem prop="verificationCode">
       <Row>
         <Col span="15">
-          <Input v-model="form.verificationCode" placeholder="请输入验证码" class="register"></Input>
+          <Input v-model="form.verificationCode" placeholder="请输入验证码" class="resetPassword"></Input>
         </Col>
         <Col span="8" offset="1">
           <Button :title="sendbtnTitle" :loading="showLoaingRing" :disabled="disableSendbtn" type="success" ghost long size="large" @click="sendVerificationCode">{{ btnSendEmailText }}</Button>
         </Col>
       </Row>
     </FormItem>
-    <FormItem id="registerBtn">
-      <Button @click="handleSubmit" type="primary" long ghost size="large" style="margin-bottom:6px;">注册</Button>
+    <FormItem prop="password" v-show="showPasswordInput">
+      <Input type="password" v-model="form.password" placeholder="请输入密码" class="resetPassword">
+        <span slot="prepend">
+          <Icon type="ios-lock"></Icon>
+        </span>
+      </Input>
+    </FormItem>
+    <FormItem prop="comfirm" v-show="showPasswordInput">
+      <Input type="password" v-model="form.comfirm" placeholder="请再次输入密码" class="resetPassword">
+        <span slot="prepend">
+          <Icon type="ios-lock"></Icon>
+        </span>
+      </Input>
+    </FormItem>
+    <FormItem id="resetBtn">
+      <Button @click="handleSubmit" type="primary" long ghost size="large" style="margin-bottom:6px;">重置</Button>
     </FormItem>
   </Form>
 </template>
@@ -48,51 +48,7 @@ import { sendMail } from '@/api/user'
 import Countdown from 'countdown-lft'
 
 export default {
-  name: 'RegisterForm',
-  // props: {
-  //   userNameRules: {
-  //     type: Array,
-  //     default: () => {
-  //       return [
-  //         { required: true, message: '账号不能为空', trigger: 'blur' }
-  //       ]
-  //     }
-  //   },
-  //   passwordRules: {
-  //     type: Array,
-  //     default: () => {
-  //       return [
-  //         { required: true, message: '密码不能为空', trigger: 'blur' }
-  //       ]
-  //     }
-  //   },
-  //   comfirmRules: {
-  //     type: Array,
-  //     default: () => {
-  //       return [
-  //         { required: true, message: '第二次输入密码不能为空', trigger: 'blur' }
-  //         // { required: true, message: '两次输入的密码不一致', 'is': this.form.comfirm, trigger: 'blur' }
-  //         // { validator: validatePassword, trigger: 'blur' }
-  //       ]
-  //     }
-  //   },
-  //   emailRules: {
-  //     type: Array,
-  //     default: () => {
-  //       return [
-  //         { required: true, message: '邮箱不能为空', trigger: 'blur' }
-  //       ]
-  //     }
-  //   }
-  //   // verificationCodeRules: {
-  //   //   type: Array,
-  //   //   default: () => {
-  //   //     return [
-  //   //       { required: true, message: '验证码不能为空', trigger: 'blur' }
-  //   //     ]
-  //   //   }
-  //   // }
-  // },
+  name: 'ResetPasswordForm',
   data () {
     const comfirmPassword = (rule, value, callback) => {
       // console.log(value)
@@ -114,6 +70,8 @@ export default {
       showLoaingRing: false,
       // 发送按钮倒计时显示的提示文字
       sendbtnTitle: '',
+      // 是否显示密码填写框
+      showPasswordInput: false,
       form: {
         userName: 'super_admin',
         password: '123',
@@ -155,7 +113,7 @@ export default {
   // },
   methods: {
     handleSubmit () {
-      this.$refs.registerForm.validate((valid) => {
+      this.$refs.resetPasswordForm.validate((valid) => {
         if (valid) {
           this.$emit('on-success-valid', {
             userName: this.form.userName,
@@ -169,14 +127,14 @@ export default {
     sendVerificationCode () {
       // this.disableSendbtn = true
       // 发送验证码之前首先确保邮箱格式正确
-      this.$refs.registerForm.validateField('email', (result) => {
+      this.$refs.resetPasswordForm.validateField('email', (result) => {
         console.log('result: ' + result)
         // 若返回字符串为空则代码该字段验证通过
         if (result === '') {
           console.log('开始请求发送邮件api')
           this.btnSendEmailText = '发送中...'
           this.showLoaingRing = true
-          sendMail(this.form.email, '注册', 'register', this.form.userName).then((res) => {
+          sendMail(this.form.email, '密码重置', 'resetpassword', this.form.userName).then((res) => {
             // console.log('返回结果：' + Object.keys(res.data))
             // console.log('status: ' + res.status)
             console.log('res.data: ' + res.data)
@@ -186,6 +144,16 @@ export default {
                   background: true,
                   content: '获取成功！'
                 })
+                setTimeout(() => {
+                  this.$Notice.info({
+                    title: '提示信息',
+                    desc: '请填写验证码并输入两次新密码！',
+                    duration: 0,
+                    name: 'tip2'
+                  })
+                  // 显示密码输入框
+                  this.showPasswordInput = true
+                }, 1600)
               }
               if (res.data === 'refused') {
                 this.$Message['warning']({
@@ -229,7 +197,7 @@ export default {
             this.btnSendEmailText = '重新发送'
             this.$Message['warning']({
               background: true,
-              content: err
+              content: err.response.data
             })
           })
         } else {
@@ -253,20 +221,20 @@ export default {
 }
 </script>
 <style>
-.register .ivu-input-default{
+.resetPassword .ivu-input-default{
     background:transparent;
     color: #fff;
     font-size: 16px;
     height: 38px;
 }
-.register .ivu-input-group-prepend{
+.resetPassword .ivu-input-group-prepend{
     background:transparent;
     color: #fff;
  }
-.register .ivu-input-group-prepend span i{
+.resetPassword .ivu-input-group-prepend span i{
     font-size: 20px;
  }
- /* .register{
+ /* .resetPassword{
     height: 10px;
  } */
 
@@ -285,5 +253,8 @@ export default {
     /* margin-left: 4px; */
     /* line-height: 1.5; */
     padding: 0px 0px 3px 0px;
+}
+#resetBtn{
+  margin-bottom: 0px;
 }
 </style>

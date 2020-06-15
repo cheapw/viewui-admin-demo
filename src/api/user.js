@@ -37,6 +37,17 @@ import qs from 'qs'
 //   })
 // }
 
+export const resetPassword = (username, password, email, code) => {
+  return axios.request({
+    url: 'register/resetpassword',
+    method: 'post',
+    header: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({ username: username, password: password, email: email, code: code })
+  })
+}
+
 export const register = (data) => {
   return axios.request({
     url: 'register',
@@ -48,7 +59,7 @@ export const register = (data) => {
   })
 }
 
-export const sendMail = email => {
+export const sendMail = (email, title, type, username) => {
   console.log(email)
   return axios.request({
     url: 'register/sendmail',
@@ -56,7 +67,7 @@ export const sendMail = email => {
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
-    data: qs.stringify({ email: email })
+    data: qs.stringify({ email: email, title: title, type: type, username: username })
   })
 }
 

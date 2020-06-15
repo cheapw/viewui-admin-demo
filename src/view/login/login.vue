@@ -31,9 +31,9 @@
       <br/><br/>
       <Row type="flex" justify="start">
         <Col offset="12">
-          <Button type="dashed" size="large" style="width:150px;" ghost>
+          <Button type="dashed" size="large" style="width:150px;" ghost @click="resetPassword">
             <Icon type="ios-key-outline" size="20" style="padding-right:2px;" />
-            找回密码
+            重置密码
           </Button>
         </Col>
       </Row>
@@ -42,27 +42,13 @@
 </template>
 
 <script>
-// import LoginForm from '_c/login-form'
 import { mapActions } from 'vuex'
 
 export default {
-  // components: {
-  //   LoginForm
-  // },
   methods: {
     ...mapActions([
-      'handleLogin',
-      'getUserInfo'
+      'handleLogin'
     ]),
-    // handleSubmit ({ userName, password }) {
-    //   this.handleLogin({ userName, password }).then(res => {
-    //     this.getUserInfo().then(res => {
-    //       this.$router.push({
-    //         name: this.$config.homeName
-    //       })
-    //     })
-    //   })
-    // },
     login () {
       this.handleLogin().then((res) => {
         // console.log(res.data)
@@ -78,6 +64,9 @@ export default {
     },
     register () {
       this.$router.push({ name: 'register' })
+    },
+    resetPassword () {
+      this.$router.push({ name: 'reset_password' })
     }
   }
 }

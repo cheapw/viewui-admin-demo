@@ -55,6 +55,15 @@ export default [
     component: () => import('@/view/register/register.vue')
   },
   {
+    path: '/reset_password',
+    name: 'reset_password',
+    meta: {
+      title: '密码重置',
+      hideInMenu: true
+    },
+    component: () => import('@/view/reset-password/reset-password.vue')
+  },
+  {
     path: '/',
     name: '_home',
     redirect: '/home',
